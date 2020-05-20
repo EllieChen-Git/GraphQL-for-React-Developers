@@ -1,6 +1,5 @@
 import React from "react";
-import "./App.css";
-import { gql, useQuery, useMutation } from "@apollo/client";
+import { gql, useQuery, useMutation, useSubscription } from "@apollo/client";
 import { StatusIndicator } from "./StatusIndicator";
 
 // gql: a function to take in our query string
@@ -25,12 +24,24 @@ const MUTATION = gql`
   }
 `;
 
+const SUBSRCIPTION = gql`
+  subscription {
+    liftStatusChange {
+      id
+      status
+    }
+  }
+`;
+
 function App() {
-  // useQuery (returns a ojb) is a hook that takes in our query
+  // useQuery (returns an object) is a hook that takes in our query
   const { loading, data } = useQuery(QUERY);
   // useMutation (returns an arr): a function that triggers the mutation
   // setStatus (can be anything) is the name of the function
   const [setStatus] = useMutation(MUTATION);
+
+  // useSubscription: takes our 'SUBSRCIPTION' as arg to set up subscription
+  useSubscription(SUBSRCIPTION);
 
   // Destructuring 'loading' and handling loading state
   if (loading) return <p>Loading lifts...</p>;
